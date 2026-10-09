@@ -88,7 +88,6 @@
             transition: border-color 0.3s, background-color 0.3s;
         }
 
-        /* Estilo para destacar questões não respondidas */
         .question-card.unanswered {
             border: 2px solid var(--warning-color);
             background-color: #fff5f5;
@@ -359,7 +358,7 @@
 
             var html = '<div class="question-header">' +
                 '<strong>Questão ' + numQuestao + ' (Item ' + codItem + ')</strong>' +
-                '<a href="' + caminhoPdf + '" target="_blank" rel="noopener noreferrer" class="btn-pdf">' +
+                '<a href="' + caminhoPdf + '" target="paebes_pdf_viewer" rel="noopener" class="btn-pdf">' +
                 '📄 Consultar PDF (Pág. ' + pagPdf + ')' +
                 '</a>' +
                 '</div>' +
@@ -389,7 +388,6 @@
     function calculateResult() {
         var pendentes = [];
 
-        // Verifica se todas as 68 questões foram respondidas
         for (var i = 0; i < questionsData["length"]; i++) {
             var qVal = questionsData[i];
             var numQVal = qVal["id"];
@@ -408,7 +406,6 @@
             }
         }
 
-        // Se houver alguma pendência, interrompe e avisa o aluno
         if (pendentes["length"] > 0) {
             var mensagem = "Você precisa responder TODAS as questões para finalizar!\n\n" +
                            "Questão(ões) pendente(s): " + pendentes["join"](", ") + "\n\n" +
@@ -422,7 +419,6 @@
             return;
         }
 
-        // Caso todas estejam marcadas, calcula o resultado normalmente
         var acertos = 0;
         var total = questionsData["length"];
         var estatisticasPorAssunto = {};
