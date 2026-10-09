@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabarito Interativo PAEBES 2024 - Matemática 3ª Série</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #28a745;
+            --warning-color: #dc3545;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #004085;
+        }
+
+        .question-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        /* Estilo para destacar questões não respondidas */
+        .question-card.unanswered {
+            border: 2px solid var(--warning-color);
+            background-color: #fff5f5;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .btn-pdf {
+            background-color: #6c757d;
+            color: #ffffff;
+            text-decoration: none;
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .btn-pdf:hover {
+            background-color: #5a6268;
+            color: #ffffff;
+        }
+
+        .options {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .options label {
+            font-weight: normal;
+            cursor: pointer;
+            background: #f1f3f5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            transition: all 0.2s;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 6px;
+        }
+
+        .summary-box {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .topic-group {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-left: 4px solid var(--primary-color);
+            background: #f1f3f5;
+            border-radius: 4px;
+        }
+
+        .topic-group.needs-improvement {
+            border-left-color: var(--warning-color);
+            background: #fff5f5;
+        }
+
+        .topic-group.good {
+            border-left-color: var(--secondary-color);
+            background: #f4fbf7;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .bg-danger { background-color: var(--warning-color); }
+        .bg-success { background-color: var(--secondary-color); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- TELA 1: IDENTIFICAÇÃO DO ALUNO -->
+    <div id="step-login" class="section active">
+        <h1>PAEBES 2024 - Simulado de Matemática</h1>
+        <p style="text-align: center;">3ª Série do Ensino Médio (Páginas 57 a 100)</p>
+        
+        <div class="form-group">
+            <label for="student-name">Nome Completo do Aluno:</label>
+            <input type="text" id="student-name" placeholder="Digite seu nome completo">
+        </div>
+
+        <div class="form-group">
+            <label for="student-class">Selecione sua Turma:</label>
+            <select id="student-class">
+                <option value="">-- Selecione a Turma --</option>
+                <option value="3M1">3M1</option>
+                <option value="3M2">3M2</option>
+                <option value="3M3">3M3</option>
+            </select>
+        </div>
+
+        <button type="button" onclick="startQuiz()">Iniciar Preenchimento do Gabarito</button>
+    </div>
+
+    <!-- TELA 2: GABARITO DAS QUESTÕES -->
+    <div id="step-quiz" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">
+            <div>
+                <strong>Aluno:</strong> <span id="display-name"></span> | 
+                <strong>Turma:</strong> <span id="display-class"></span>
+            </div>
+            <span style="font-weight: bold; color: var(--primary-color);">Matemática - 68 Questões</span>
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <button type="button" onclick="calculateResult()" style="margin-top: 20px; background-color: var(--secondary-color);">Finalizar e Ver Resultado</button>
+        </form>
+    </div>
+
+    <!-- TELA 3: RESULTADO E INDICADORES DE ESTUDO -->
+    <div id="step-result" class="section">
+        <h2>Resultado Diagnóstico</h2>
+        
+        <div class="summary-box">
+            <p><strong>Aluno:</strong> <span id="res-name"></span></p>
+            <p><strong>Turma:</strong> <span id="res-class"></span></p>
+            <p><strong>Total de Acertos:</strong> <span id="res-score" style="font-size: 20px; font-weight: bold;"></span></p>
+            <p><strong>Aproveitamento Geral:</strong> <span id="res-percent" style="font-size: 18px; font-weight: bold;"></span></p>
+        </div>
+
+        <h3>Indicadores por Assunto (Descritores PAEBES)</h3>
+        <p>Abaixo estão os assuntos analisados com base no seu desempenho. Dê atenção especial aos temas sinalizados em vermelho:</p>
+        
+        <div id="topics-analysis"></div>
+
+        <button type="button" onclick="window['location']['reload']()" style="margin-top: 25px;">Realizar Novo Preenchimento</button>
+    </div>
+
+</div>
+
+<script>
+    var NOME_DO_ARQUIVO_PDF = "Coletanea_PAEBES_2024.pdf";
+
+    var questionsData = [
+        { id: 1, code: "2024.01", key: "B", desc: "D009_M", topic: "Reta Numérica e Números Racionais", page: 57 },
+        { id: 2, code: "2024.02", key: "C", desc: "D038_M", topic: "Resolução de Problemas com Porcentagem", page: 57 },
+        { id: 3, code: "2024.03", key: "C", desc: "D038_M", topic: "Resolução de Problemas com Porcentagem", page: 57 },
+        { id: 4, code: "2024.04", key: "B", desc: "D039_M", topic: "Proporcionalidade entre Grandezas", page: 58 },
+        { id: 5, code: "2024.05", key: "D", desc: "D039_M", topic: "Proporcionalidade entre Grandezas", page: 58 },
+        { id: 6, code: "2024.06", key: "E", desc: "D042_M", topic: "Princípio Multiplicativo de Contagem (Análise Combinatória)", page: 59 },
+        { id: 7, code: "2024.07", key: "D", desc: "D042_M", topic: "Princípio Multiplicativo de Contagem (Análise Combinatória)", page: 60 },
+        { id: 8, code: "2024.08", key: "B", desc: "D049_M", topic: "Relações Métricas no Triângulo Retângulo", page: 60 },
+        { id: 9, code: "2024.09", key: "D", desc: "D049_M", topic: "Relações Métricas no Triângulo Retângulo", page: 61 },
+        { id: 10, code: "2024.10", key: "C", desc: "D051_M", topic: "Razões Trigonométricas no Triângulo Retângulo (Seno, Cosseno, Tangente)", page: 61 },
+        { id: 11, code: "2024.11", key: "B", desc: "D051_M", topic: "Razões Trigonométricas no Triângulo Retângulo (Seno, Cosseno, Tangente)", page: 62 },
+        { id: 12, code: "2024.12", key: "E", desc: "D057_M", topic: "Perímetro de Figuras Bidimensionais", page: 62 },
+        { id: 13, code: "2024.13", key: "D", desc: "D057_M", topic: "Perímetro de Figuras Bidimensionais", page: 63 },
+        { id: 14, code: "2024.14", key: "A", desc: "D058_M", topic: "Área de Figuras Bidimensionais", page: 63 },
+        { id: 15, code: "2024.15", key: "C", desc: "D058_M", topic: "Área de Figuras Bidimensionais", page: 64 },
+        { id: 16, code: "2024.16", key: "C", desc: "D063_M", topic: "Interpretação de Gráficos e Tabelas", page: 65 },
+        { id: 17, code: "2024.17", key: "C", desc: "D063_M", topic: "Interpretação de Gráficos e Tabelas", page: 66 },
+        { id: 18, code: "2024.18", key: "B", desc: "D064_M", topic: "Análise de Informações Financeiras e Gráficos", page: 67 },
+        { id: 19, code: "2024.19", key: "C", desc: "D064_M", topic: "Análise de Informações Financeiras e Gráficos", page: 68 },
+        { id: 20, code: "2024.20", key: "D", desc: "D065_M", topic: "Probabilidade", page: 69 },
+        { id: 21, code: "2024.21", key: "C", desc: "D065_M", topic: "Probabilidade", page: 70 },
+        { id: 22, code: "2024.22", key: "C", desc: "D071_M", topic: "Análise de Gráficos de Funções (Zeros e Monotonicidade)", page: 70 },
+        { id: 23, code: "2024.23", key: "D", desc: "D071_M", topic: "Análise de Gráficos de Funções (Zeros e Monotonicidade)", page: 71 },
+        { id: 24, code: "2024.24", key: "A", desc: "D074_M", topic: "Representação Algébrica e Gráfica da Função Exponencial", page: 71 },
+        { id: 25, code: "2024.25", key: "A", desc: "D074_M", topic: "Representação Algébrica e Gráfica da Função Exponencial", page: 72 },
+        { id: 26, code: "2024.26", key: "B", desc: "D078_M", topic: "Função Polinomial do 1º Grau e seu Gráfico", page: 73 },
+        { id: 27, code: "2024.27", key: "C", desc: "D078_M", topic: "Função Polinomial do 1º Grau e seu Gráfico", page: 74 },
+        { id: 28, code: "2024.28", key: "E", desc: "D082_M", topic: "Modelagem Gráfica de Situações do Cotidiano", page: 75 },
+        { id: 29, code: "2024.29", key: "E", desc: "D082_M", topic: "Modelagem Gráfica de Situações do Cotidiano", page: 76 },
+        { id: 30, code: "2024.30", key: "E", desc: "D085_M", topic: "Interpretação Geométrica dos Coeficientes da Reta", page: 77 },
+        { id: 31, code: "2024.31", key: "B", desc: "D085_M", topic: "Interpretação Geométrica dos Coeficientes da Reta", page: 77 },
+        { id: 32, code: "2024.32", key: "A", desc: "D085_M", topic: "Interpretação Geométrica dos Coeficientes da Reta", page: 78 },
+        { id: 33, code: "2024.33", key: "C", desc: "D086_M", topic: "Expressão Algébrica de Funções a partir de Tabelas", page: 78 },
+        { id: 34, code: "2024.34", key: "B", desc: "D086_M", topic: "Expressão Algébrica de Funções a partir de Tabelas", page: 79 },
+        { id: 35, code: "2024.35", key: "B", desc: "D086_M", topic: "Expressão Algébrica de Funções a partir de Tabelas", page: 79 },
+        { id: 36, code: "2024.36", key: "E", desc: "D087_M", topic: "Equação do 2º Grau", page: 80 },
+        { id: 37, code: "2024.37", key: "D", desc: "D087_M", topic: "Equação do 2º Grau", page: 81 },
+        { id: 38, code: "2024.38", key: "C", desc: "D088_M", topic: "Aplicações da Função Exponencial", page: 81 },
+        { id: 39, code: "2024.39", key: "D", desc: "D088_M", topic: "Aplicações da Função Exponencial", page: 82 },
+        { id: 40, code: "2024.40", key: "D", desc: "D096_M", topic: "Progressão Aritmética (PA)", page: 82 },
+        { id: 41, code: "2024.41", key: "C", desc: "D096_M", topic: "Progressão Aritmética (PA)", page: 83 },
+        { id: 42, code: "2024.42", key: "C", desc: "D097_M", topic: "Progressão Geométrica (PG)", page: 83 },
+        { id: 43, code: "2024.43", key: "D", desc: "D097_M", topic: "Progressão Geométrica (PG)", page: 84 },
+        { id: 44, code: "2024.44", key: "E", desc: "D111_M", topic: "Geometria Espacial (Poliedros e Planificações/Vistas)", page: 85 },
+        { id: 45, code: "2024.45", key: "B", desc: "D111_M", topic: "Geometria Espacial (Poliedros e Planificações/Vistas)", page: 86 },
+        { id: 46, code: "2024.46", key: "E", desc: "D119_M", topic: "Semelhança de Triângulos e Proporcionalidade", page: 87 },
+        { id: 47, code: "2024.47", key: "A", desc: "D119_M", topic: "Semelhança de Triângulos e Proporcionalidade", page: 88 },
+        { id: 48, code: "2024.48", key: "C", desc: "D124_M", topic: "Equação da Reta no Plano Cartesiano", page: 88 },
+        { id: 49, code: "2024.49", key: "C", desc: "D124_M", topic: "Equação da Reta no Plano Cartesiano", page: 89 },
+        { id: 50, code: "2024.50", key: "C", desc: "D125_M", topic: "Relação de Euler e Propriedades dos Poliedros", page: 89 },
+        { id: 51, code: "2024.51", key: "C", desc: "D125_M", topic: "Relação de Euler e Propriedades dos Poliedros", page: 89 },
+        { id: 52, code: "2024.52", key: "B", desc: "D126_M", topic: "Gráficos de Funções Trigonométricas", page: 89 },
+        { id: 53, code: "2024.53", key: "A", desc: "D126_M", topic: "Gráficos de Funções Trigonométricas", page: 90 },
+        { id: 54, code: "2024.54", key: "B", desc: "D127_M", topic: "Intersecção de Retas e Sistemas de Equações", page: 91 },
+        { id: 55, code: "2024.55", key: "D", desc: "D127_M", topic: "Intersecção de Retas e Sistemas de Equações", page: 92 },
+        { id: 56, code: "2024.56", key: "E", desc: "D129_M", topic: "Área Total e Volume de Sólidos Geométricos", page: 92 },
+        { id: 57, code: "2024.57", key: "E", desc: "D129_M", topic: "Área Total e Volume de Sólidos Geométricos", page: 93 },
+        { id: 58, code: "2024.58", key: "D", desc: "D132_M", topic: "Problemas Envolvendo Função do 1º Grau", page: 93 },
+        { id: 59, code: "2024.59", key: "E", desc: "D132_M", topic: "Problemas Envolvendo Função do 1º Grau", page: 94 },
+        { id: 60, code: "2024.60", key: "E", desc: "D133_M", topic: "Pontos de Máximo e Mínimo da Função do 2º Grau", page: 94 },
+        { id: 61, code: "2024.61", key: "A", desc: "D133_M", topic: "Pontos de Máximo e Mínimo da Função do 2º Grau", page: 95 },
+        { id: 62, code: "2024.62", key: "E", desc: "D145_M", topic: "Reconhecimento do Gráfico da Função do 1º Grau", page: 95 },
+        { id: 63, code: "2024.63", key: "B", desc: "D145_M", topic: "Reconhecimento do Gráfico da Função do 1º Grau", page: 96 },
+        { id: 64, code: "2024.64", key: "C", desc: "D033_M", topic: "Localização de Números Irracionais na Reta Numérica", page: 97 },
+        { id: 65, code: "2024.65", key: "E", desc: "D043_M", topic: "Localização de Pontos no Plano Cartesiano", page: 98 },
+        { id: 66, code: "2024.66", key: "D", desc: "D066_M", topic: "Medidas de Tendência Central (Estatística)", page: 98 },
+        { id: 67, code: "2024.67", key: "B", desc: "D128_M", topic: "Representações Algébricas e Gráficas da Circunferência", page: 99 },
+        { id: 68, code: "2024.68", key: "C", desc: "D131_M", topic: "Sistemas de Equações Lineares", page: 100 }
+    ];
+
+    var alunoInfo = { nome: "", turma: "" };
+
+    function startQuiz() {
+        var campoNome = document["getElementById"]("student-name");
+        var campoTurma = document["getElementById"]("student-class");
+        
+        var nomeDigitado = campoNome ? campoNome["value"]["trim"]() : "";
+        var turmaSelecionada = campoTurma ? campoTurma["value"] : "";
+
+        if (!nomeDigitado || !turmaSelecionada) {
+            alert("Por favor, preencha seu nome e selecione sua turma.");
+            return;
+        }
+
+        alunoInfo["nome"] = nomeDigitado;
+        alunoInfo["turma"] = turmaSelecionada;
+
+        document["getElementById"]("display-name")["innerText"] = nomeDigitado;
+        document["getElementById"]("display-class")["innerText"] = turmaSelecionada;
+
+        renderQuestions();
+
+        document["getElementById"]("step-login")["classList"]["remove"]("active");
+        document["getElementById"]("step-quiz")["classList"]["add"]("active");
+    }
+
+    function renderQuestions() {
+        var container = document["getElementById"]("questions-container");
+        container["innerHTML"] = "";
+
+        var opcoes = ["A", "B", "C", "D", "E"];
+
+        for (var i = 0; i < questionsData["length"]; i++) {
+            var questao = questionsData[i];
+            var numQuestao = questao["id"];
+            var codItem = questao["code"];
+            var pagPdf = questao["page"];
+            var assunto = questao["topic"];
+
+            var caminhoPdf = NOME_DO_ARQUIVO_PDF + "#page=" + pagPdf;
+
+            var card = document["createElement"]("div");
+            card["className"] = "question-card";
+            card["id"] = "card_q_" + numQuestao;
+
+            var html = '<div class="question-header">' +
+                '<strong>Questão ' + numQuestao + ' (Item ' + codItem + ')</strong>' +
+                '<a href="' + caminhoPdf + '" target="_blank" rel="noopener noreferrer" class="btn-pdf">' +
+                '📄 Consultar PDF (Pág. ' + pagPdf + ')' +
+                '</a>' +
+                '</div>' +
+                '<div><small>Assunto: ' + assunto + '</small></div>' +
+                '<div class="options">';
+
+            for (var j = 0; j < opcoes["length"]; j++) {
+                var opt = opcoes[j];
+                html += '<label>' +
+                    '<input type="radio" name="q_' + numQuestao + '" value="' + opt + '" onchange="removerDestaque(' + numQuestao + ')"> ' + opt +
+                    '</label>';
+            }
+
+            html += '</div>';
+            card["innerHTML"] = html;
+            container["appendChild"](card);
+        }
+    }
+
+    function removerDestaque(numQuestao) {
+        var card = document["getElementById"]("card_q_" + numQuestao);
+        if (card) {
+            card["classList"]["remove"]("unanswered");
+        }
+    }
+
+    function calculateResult() {
+        var pendentes = [];
+
+        // Verifica se todas as 68 questões foram respondidas
+        for (var i = 0; i < questionsData["length"]; i++) {
+            var qVal = questionsData[i];
+            var numQVal = qVal["id"];
+            var selVal = document["querySelector"]('input[name="q_' + numQVal + '"]:checked');
+            var cardElem = document["getElementById"]("card_q_" + numQVal);
+
+            if (!selVal) {
+                pendentes["push"](numQVal);
+                if (cardElem) {
+                    cardElem["classList"]["add"]("unanswered");
+                }
+            } else {
+                if (cardElem) {
+                    cardElem["classList"]["remove"]("unanswered");
+                }
+            }
+        }
+
+        // Se houver alguma pendência, interrompe e avisa o aluno
+        if (pendentes["length"] > 0) {
+            var mensagem = "Você precisa responder TODAS as questões para finalizar!\n\n" +
+                           "Questão(ões) pendente(s): " + pendentes["join"](", ") + "\n\n" +
+                           "Por favor, escolha uma alternativa para continuar.";
+            alert(mensagem);
+
+            var primeiraPendenteCard = document["getElementById"]("card_q_" + pendentes[0]);
+            if (primeiraPendenteCard) {
+                primeiraPendenteCard["scrollIntoView"]({ behavior: "smooth", block: "center" });
+            }
+            return;
+        }
+
+        // Caso todas estejam marcadas, calcula o resultado normalmente
+        var acertos = 0;
+        var total = questionsData["length"];
+        var estatisticasPorAssunto = {};
+
+        for (var i = 0; i < questionsData["length"]; i++) {
+            var q = questionsData[i];
+            var numQ = q["id"];
+            var descritor = q["desc"];
+            var assunto = q["topic"];
+            var gabarito = q["key"];
+
+            var selecionado = document["querySelector"]('input[name="q_' + numQ + '"]:checked');
+            var resposta = selecionado ? selecionado["value"] : null;
+            var acertou = (resposta === gabarito);
+
+            if (acertou) {
+                acertos++;
+            }
+
+            if (!estatisticasPorAssunto[descritor]) {
+                estatisticasPorAssunto[descritor] = {
+                    desc: descritor,
+                    topic: assunto,
+                    totalQuestoes: 0,
+                    totalAcertos: 0
+                };
+            }
+            estatisticasPorAssunto[descritor]["totalQuestoes"]++;
+            if (acertou) {
+                estatisticasPorAssunto[descritor]["totalAcertos"]++;
+            }
+        }
+
+        document["getElementById"]("res-name")["innerText"] = alunoInfo["nome"];
+        document["getElementById"]("res-class")["innerText"] = alunoInfo["turma"];
+        document["getElementById"]("res-score")["innerText"] = acertos + " de " + total;
+        var porcentagem = ((acertos / total) * 100)["toFixed"](1);
+        document["getElementById"]("res-percent")["innerText"] = porcentagem + "%";
+
+        var containerTopicos = document["getElementById"]("topics-analysis");
+        containerTopicos["innerHTML"] = "";
+
+        var chavesDescritores = Object["keys"](estatisticasPorAssunto);
+        for (var k = 0; k < chavesDescritores["length"]; k++) {
+            var itemStat = estatisticasPorAssunto[chavesDescritores[k]];
+            var numTot = itemStat["totalQuestoes"];
+            var numAcert = itemStat["totalAcertos"];
+            var pctDesc = Math["round"]((numAcert / numTot) * 100);
+            var estaBom = (pctDesc >= 70);
+
+            var div = document["createElement"]("div");
+            div["className"] = "topic-group " + (estaBom ? "good" : "needs-improvement");
+
+            var htmlTopico = '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                '<strong>[' + itemStat["desc"] + '] ' + itemStat["topic"] + '</strong>' +
+                '<span class="badge ' + (estaBom ? 'bg-success' : 'bg-danger') + '">' +
+                numAcert + '/' + numTot + ' acertos (' + pctDesc + '%)' +
+                '</span>' +
+                '</div>' +
+                '<p style="margin: 5px 0 0 0; font-size: 14px; color: #555;">' +
+                (estaBom 
+                    ? '✅ Ótimo domínio deste conteúdo!' 
+                    : '⚠️ <strong>Recomendação de Estudo:</strong> Revisar os conceitos referentes a este descritor do PAEBES.') +
+                '</p>';
+
+            div["innerHTML"] = htmlTopico;
+            containerTopicos["appendChild"](div);
+        }
+
+        document["getElementById"]("step-quiz")["classList"]["remove"]("active");
+        document["getElementById"]("step-result")["classList"]["add"]("active");
+        window["scrollTo"](0, 0);
+    }
+</script>
+
+</body>
+</html>
