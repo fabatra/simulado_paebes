@@ -103,17 +103,17 @@
         .btn-pdf {
             background-color: #6c757d;
             color: #ffffff;
-            text-decoration: none;
-            display: inline-block;
+            border: none;
             padding: 6px 12px;
             font-size: 14px;
             border-radius: 4px;
+            cursor: pointer;
+            width: auto;
             transition: background 0.2s;
         }
 
         .btn-pdf:hover {
             background-color: #5a6268;
-            color: #ffffff;
         }
 
         .options {
@@ -171,6 +171,75 @@
         }
         .bg-danger { background-color: var(--warning-color); }
         .bg-success { background-color: var(--secondary-color); }
+
+        /* ESTILOS DA JANELA MODAL (FLUTUANTE) DO PDF */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 950px;
+            height: 85vh;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            padding: 12px 20px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .btn-close-modal {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .btn-close-modal:hover {
+            background: #bd2130;
+        }
+
+        .modal-body {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            background: #525659;
+        }
+
+        .modal-body iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -235,6 +304,19 @@
         <button type="button" onclick="window['location']['reload']()" style="margin-top: 25px;">Realizar Novo Preenchimento</button>
     </div>
 
+</div>
+
+<!-- JANELA MODAL FLUTUANTE PARA VISUALIZAÇÃO DO PDF -->
+<div id="modal-pdf" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 id="modal-titulo-pagina">Consulta ao PDF da Questão</h4>
+            <button type="button" class="btn-close-modal" onclick="fecharModalPdf()">✖ Fechar PDF</button>
+        </div>
+        <div class="modal-body">
+            <iframe id="iframe-pdf" src="about:blank"></iframe>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -350,17 +432,15 @@
             var pagPdf = questao["page"];
             var assunto = questao["topic"];
 
-            var caminhoPdf = NOME_DO_ARQUIVO_PDF + "#page=" + pagPdf;
-
             var card = document["createElement"]("div");
             card["className"] = "question-card";
             card["id"] = "card_q_" + numQuestao;
 
             var html = '<div class="question-header">' +
                 '<strong>Questão ' + numQuestao + ' (Item ' + codItem + ')</strong>' +
-                '<a href="' + caminhoPdf + '" target="paebes_pdf_viewer" rel="noopener" class="btn-pdf">' +
+                '<button type="button" class="btn-pdf" onclick="abrirModalPdf(' + pagPdf + ', ' + numQuestao + ')">' +
                 '📄 Consultar PDF (Pág. ' + pagPdf + ')' +
-                '</a>' +
+                '</button>' +
                 '</div>' +
                 '<div><small>Assunto: ' + assunto + '</small></div>' +
                 '<div class="options">';
@@ -375,6 +455,31 @@
             html += '</div>';
             card["innerHTML"] = html;
             container["appendChild"](card);
+        }
+    }
+
+    function abrirModalPdf(pagina, numQuestao) {
+        var iframe = document["getElementById"]("iframe-pdf");
+        var modal = document["getElementById"]("modal-pdf");
+        var titulo = document["getElementById"]("modal-titulo-pagina");
+
+        if (iframe && modal) {
+            iframe["src"] = NOME_DO_ARQUIVO_PDF + "#page=" + pagina;
+            if (titulo) {
+                titulo["innerText"] = "Consulta ao PDF - Questão " + numQuestao + " (Página " + pagina + ")";
+            }
+            modal["style"]["display"] = "flex";
+        }
+    }
+
+    function fecharModalPdf() {
+        var modal = document["getElementById"]("modal-pdf");
+        var iframe = document["getElementById"]("iframe-pdf");
+        if (modal) {
+            modal["style"]["display"] = "none";
+        }
+        if (iframe) {
+            iframe["src"] = "about:blank";
         }
     }
 
@@ -412,7 +517,7 @@
                            "Por favor, escolha uma alternativa para continuar.";
             alert(mensagem);
 
-            var primeiraPendenteCard = document["getElementById"]("card_q_" + pendentes[0]);
+            var primeiraPendenteCard = document["getElementById"]("card_q_" + pendentes);
             if (primeiraPendenteCard) {
                 primeiraPendenteCard["scrollIntoView"]({ behavior: "smooth", block: "center" });
             }
