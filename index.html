@@ -212,6 +212,28 @@
             font-size: 16px;
         }
 
+        .modal-header-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-minimize-modal {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: auto;
+            transition: background 0.2s;
+        }
+
+        .btn-minimize-modal:hover {
+            background: #e0a800;
+        }
+
         .btn-close-modal {
             background: #dc3545;
             color: white;
@@ -222,6 +244,7 @@
             border-radius: 4px;
             cursor: pointer;
             width: auto;
+            transition: background 0.2s;
         }
 
         .btn-close-modal:hover {
@@ -239,6 +262,29 @@
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        /* BARRA FLUTUANTE QUANDO O PDF ESTÁ MINIMIZADO */
+        .mini-pdf-bar {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 2001;
+            font-weight: bold;
+            font-size: 14px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .mini-pdf-bar:hover {
+            background-color: #004085;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -313,7 +359,10 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 id="modal-titulo-pagina">Consulta ao PDF da Questão</h4>
-            <button type="button" class="btn-close-modal" onclick="fecharModalPdf()">✖ Fechar PDF</button>
+            <div class="modal-header-btns">
+                <button type="button" class="btn-minimize-modal" onclick="minimizarModalPdf()">➖ Minimizar</button>
+                <button type="button" class="btn-close-modal" onclick="fecharModalPdf()">✖ Fechar</button>
+            </div>
         </div>
         <div class="modal-body">
             <iframe id="iframe-pdf" src="about:blank"></iframe>
@@ -321,8 +370,15 @@
     </div>
 </div>
 
+<!-- BARRA FLUTUANTE QUANDO O PDF ESTÁ MINIMIZADO -->
+<div id="mini-pdf-bar" class="mini-pdf-bar" onclick="restaurarModalPdf()">
+    📄 PDF Minimizado - <span id="mini-pdf-info">Página 57</span> (Clique para expandir)
+</div>
+
 <script>
     var NOME_DO_ARQUIVO_PDF = "Coletanea_PAEBES_2024.pdf";
+    var paginaAtualPdf = null;
+    var numQuestaoAtualPdf = null;
 
     var questionsData = [
         { id: 1, code: "2024.01", key: "B", desc: "D009_M", topic: "Reta Numérica e Números Racionais", page: 57 },
@@ -463,26 +519,73 @@
     function abrirModalPdf(pagina, numQuestao) {
         var iframe = document["getElementById"]("iframe-pdf");
         var modal = document["getElementById"]("modal-pdf");
+        var miniBar = document["getElementById"]("mini-pdf-bar");
         var titulo = document["getElementById"]("modal-titulo-pagina");
+        var miniInfo = document["getElementById"]("mini-pdf-info");
 
         if (iframe && modal) {
-            iframe["src"] = NOME_DO_ARQUIVO_PDF + "#page=" + pagina;
-            if (titulo) {
-                titulo["innerText"] = "Consulta ao PDF - Questão " + numQuestao + " (Página " + pagina + ")";
+            // Só altera o src se for uma nova página ou se o iframe estiver vazio
+            if (paginaAtualPdf !== pagina || iframe["src"] === "about:blank" || iframe["src"] === "") {
+                iframe["src"] = NOME_DO_ARQUIVO_PDF + "#page=" + pagina;
+                paginaAtualPdf = pagina;
+                numQuestaoAtualPdf = numQuestao;
             }
+
+            var textoInfo = "Questão " + numQuestao + " (Página " + pagina + ")";
+            if (titulo) {
+                titulo["innerText"] = "Consulta ao PDF - " + textoInfo;
+            }
+            if (miniInfo) {
+                miniInfo["innerText"] = textoInfo;
+            }
+
+            if (miniBar) {
+                miniBar["style"]["display"] = "none";
+            }
+            modal["style"]["display"] = "flex";
+        }
+    }
+
+    function minimizarModalPdf() {
+        var modal = document["getElementById"]("modal-pdf");
+        var miniBar = document["getElementById"]("mini-pdf-bar");
+
+        if (modal) {
+            modal["style"]["display"] = "none";
+        }
+        if (miniBar) {
+            miniBar["style"]["display"] = "block";
+        }
+    }
+
+    function restaurarModalPdf() {
+        var modal = document["getElementById"]("modal-pdf");
+        var miniBar = document["getElementById"]("mini-pdf-bar");
+
+        if (miniBar) {
+            miniBar["style"]["display"] = "none";
+        }
+        if (modal) {
             modal["style"]["display"] = "flex";
         }
     }
 
     function fecharModalPdf() {
         var modal = document["getElementById"]("modal-pdf");
+        var miniBar = document["getElementById"]("mini-pdf-bar");
         var iframe = document["getElementById"]("iframe-pdf");
+
         if (modal) {
             modal["style"]["display"] = "none";
+        }
+        if (miniBar) {
+            miniBar["style"]["display"] = "none";
         }
         if (iframe) {
             iframe["src"] = "about:blank";
         }
+        paginaAtualPdf = null;
+        numQuestaoAtualPdf = null;
     }
 
     function removerDestaque(numQuestao) {
